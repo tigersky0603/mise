@@ -1,0 +1,264 @@
+:root {
+    --primary-color: #3F6DDC;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --background-color: #f0f0f0;
+    --text-color: #333333;
+    --good-color: #4CAF50; /* (좋음) */
+    --moderate-color: #FFC107; /* (보통) */
+    --bad-color: #FF5722; /* (나쁨) */
+    --very-bad-color: #9C27B0; /* (매우 나쁨) */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.weather-widget {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 5%;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+    background-color: var(--background-color);
+    border-radius: 15px;
+    padding: 5%;
+    margin-bottom: 5%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    color: var(--secondary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.3em;
+}
+
+.weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.temperature {
+    font-size: 3em;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.weather-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    font-size: 1.1em;
+}
+
+.forecast {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.forecast-day {
+    text-align: center;
+    font-size: 0.9em;
+    flex: 1 1 20%;
+    margin-bottom: 1em;
+}
+
+h2.bar-title {
+    background-color: #3F6DDC; /* 파란색 배경 */
+    color: white; /* 텍스트 색상 */
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    display: block; /* 부모 요소의 너비만큼 확장 */
+    width: 100%; /* 부모의 전체 너비 차지 */
+    box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
+    margin-bottom: 20px; /* 아래쪽 마진 */
+}
+
+.search-bar {
+    margin-bottom: 1.5em;
+}
+
+.search-bar input {
+    padding: 0.75em;
+    width: 70%;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+.search-bar button {
+    padding: 0.75em 1.25em;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.search-bar button:hover {
+    background-color: #2980b9;
+}
+
+.air-quality {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.air-quality-item {
+    text-align: center;
+    flex: 1 1 30%;
+    padding: 0.6em;
+    margin-bottom: 1em;
+}
+
+.air-quality-item div:first-child {
+    font-weight: bold;
+    margin-bottom: 0.3em;
+}
+
+.air-quality-item div:nth-child(2) {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.forecast-24h {
+    overflow-x: auto;
+}
+
+.forecast-24h table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.forecast-24h th, .forecast-24h td {
+    padding: 0.75em;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.forecast-24h th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.health-index h3 {
+    font-size: 1.5em;
+/*           color: var(--accent-color);*/
+    margin-bottom: 0.6em;
+}
+
+/* 상태별 색상 */
+.good { color: var(--good-color); }
+.moderate { color: var(--moderate-color); }
+.bad { color: var(--bad-color); }
+.very-bad { color: var(--very-bad-color); }
+
+.news-item {
+    margin-bottom: 1em;
+}
+
+.news-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+.news-item a:hover {
+    text-decoration: underline;
+}
+
+.news-date {
+    font-size: 0.9em;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .weather-widget {
+        padding: 1em;
+    }
+
+    .section {
+        padding: 1em;
+    }
+
+    .temperature {
+        font-size: 2.5em;
+    }
+
+    .forecast-day {
+        flex: 1 1 50%;
+    }
+
+    .air-quality-item {
+        flex: 1 1 100%;
+    }
+
+    .search-bar input {
+        width: 60%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+
+    .temperature {
+        font-size: 2em;
+    }
+
+    .forecast-day {
+        flex: 1 1 100%;
+    }
+
+    .search-bar input {
+        width: 100%;
+        margin-bottom: 0.5em;
+    }
+
+    .search-bar button {
+        width: 100%;
+    }
+}
+
+.main-header {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 1em;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
