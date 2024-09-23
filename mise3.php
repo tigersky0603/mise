@@ -3,12 +3,20 @@
 include 'includes/functions.php';
 
 // 대기질 데이터 가져오기
-$airQualityData = getAirQualityData($airQualityApiKey, $airQualityServiceUrl, $sidoName);
+$airQualityRealData = getAirQualityRealData($airQualityApiKey, $airQualityRealtimeServiceUrl, $sidoName);
+$airQualityForecastData = getAirQualityForecastData($airQualityApiKey, $airQualityForecastServiceUrl);
 
-// 대기질 데이터 처리
-$pm10Value = isset($airQualityData['response']['body']['items'][1]['pm10Value']) ? $airQualityData['response']['body']['items'][1]['pm10Value'] : '정보 없음';
-$pm25Value = isset($airQualityData['response']['body']['items'][1]['pm25Value']) ? $airQualityData['response']['body']['items'][1]['pm25Value'] : '정보 없음';
-$o3Value = isset($airQualityData['response']['body']['items'][1]['o3Value']) ? $airQualityData['response']['body']['items'][1]['o3Value'] : '정보 없음';
+// 대기질 실시간 데이터 처리
+$pm10Value = isset($airQualityRealData['response']['body']['items'][1]['pm10Value']) ? $airQualityRealData['response']['body']['items'][1]['pm10Value'] : '정보 없음';
+$pm25Value = isset($airQualityRealData['response']['body']['items'][1]['pm25Value']) ? $airQualityRealData['response']['body']['items'][1]['pm25Value'] : '정보 없음';
+$o3Value = isset($airQualityRealData['response']['body']['items'][1]['o3Value']) ? $airQualityRealData['response']['body']['items'][1]['o3Value'] : '정보 없음';
+
+$ImageUrl1 = $airQualityForecastData['response']['body']['items'][1]['imageUrl1'];
+$ImageUrl2 = $airQualityForecastData['response']['body']['items'][1]['imageUrl2'];
+$ImageUrl3 = $airQualityForecastData['response']['body']['items'][1]['imageUrl3'];
+$ImageUrl4 = $airQualityForecastData['response']['body']['items'][1]['imageUrl4'];
+$ImageUrl5 = $airQualityForecastData['response']['body']['items'][1]['imageUrl5'];
+$ImageUrl6 = $airQualityForecastData['response']['body']['items'][1]['imageUrl6'];
 
 
 // 지명으로 좌표 가져오기
@@ -16,9 +24,9 @@ $coords = getShortCoordinates($sidoName);
 $regionCode = getMidRegionCode($sidoName);
 
 // 날씨 데이터 가져오기
-$weatherShortData = getWeatherShortData($weatherShortApiKey, $weatherShortServiceUrl, $coords['x'], $coords['y']);
-$weatherMidTempData = getWeatherMidData($weatherMidTempApiKey, $weatherMidTempServiceUrl, $regionCode);
-$weatherMidFcstData = getWeatherMidData($weatherMidFcstApiKey, $weatherMidFcstServiceUrl, $regionCode);
+$weatherShortData = getWeatherShortData($weatherApiKey, $weatherShortServiceUrl, $coords['x'], $coords['y']);
+$weatherMidTempData = getWeatherMidData($weatherApiKey, $weatherMidTempServiceUrl, $regionCode);
+$weatherMidFcstData = getWeatherMidData($weatherApiKey, $weatherMidFcstServiceUrl, $regionCode);
 
 // 찾고자 하는 카테고리 목록
 $categories = ["SKY", "T1H", "REH", "PTY"];
@@ -198,6 +206,32 @@ $newsData = getNaverNews("미세먼지");
                         <p style="color: <?php echo $o3Grade[1]; ?>"><?php echo $o3Grade[0]; ?></p>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- 이미지 섹션 -->
+        <div class="row my-4">
+            <!-- 첫 번째 이미지 세트 -->
+            <div class="col-md-4">
+                <img src="<?php echo $ImageUrl1; ?>" class="img-fluid" alt="Image 1">
+            </div>
+            <div class="col-md-4">
+                <img src="<?php echo $ImageUrl2; ?>" class="img-fluid" alt="Image 2">
+            </div>
+            <div class="col-md-4">
+                <img src="<?php echo $ImageUrl3; ?>" class="img-fluid" alt="Image 3">
+            </div>
+        </div>
+        <div class="row my-4">
+            <!-- 두 번째 이미지 세트 -->
+            <div class="col-md-4">
+                <img src="<?php echo $ImageUrl4; ?>" class="img-fluid" alt="Image 4">
+            </div>
+            <div class="col-md-4">
+                <img src="<?php echo $ImageUrl5; ?>" class="img-fluid" alt="Image 5">
+            </div>
+            <div class="col-md-4">
+                <img src="<?php echo $ImageUrl6; ?>" class="img-fluid" alt="Image 6">
             </div>
         </div>
 

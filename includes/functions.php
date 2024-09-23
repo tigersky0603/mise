@@ -1,29 +1,57 @@
 <?php
-// 대기질 API 키와 URL (시도별 실시간 측정정보 조회)
+// 대기질 API 키와 URL 
+// 시도별 실시간 측정정보 조회
 $airQualityApiKey = "LCuy9eWKCdC6S6qsHWBEl4Yfuxv0UPJP1yJVDl1jxPP5Ne6PbGHPI9%2BQLRWdqOJ1fdGMEhdRONk4O9X7AZPT9A%3D%3D";
-$airQualityServiceUrl = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
+$airQualityRealtimeServiceUrl = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
+$airQualityForecastServiceUrl = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMinuDustFrcstDspth";
 
 // 날씨 API 키와 URL 
 // 단기예보조회
-$weatherShortApiKey = "LCuy9eWKCdC6S6qsHWBEl4Yfuxv0UPJP1yJVDl1jxPP5Ne6PbGHPI9%2BQLRWdqOJ1fdGMEhdRONk4O9X7AZPT9A%3D%3D";
+$weatherApiKey = "LCuy9eWKCdC6S6qsHWBEl4Yfuxv0UPJP1yJVDl1jxPP5Ne6PbGHPI9%2BQLRWdqOJ1fdGMEhdRONk4O9X7AZPT9A%3D%3D";
 $weatherShortServiceUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
 // 중기예보조회
-$weatherMidTempApiKey = "LCuy9eWKCdC6S6qsHWBEl4Yfuxv0UPJP1yJVDl1jxPP5Ne6PbGHPI9%2BQLRWdqOJ1fdGMEhdRONk4O9X7AZPT9A%3D%3D";
 $weatherMidTempServiceUrl = "http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa";
-$weatherMidFcstApiKey = "LCuy9eWKCdC6S6qsHWBEl4Yfuxv0UPJP1yJVDl1jxPP5Ne6PbGHPI9%2BQLRWdqOJ1fdGMEhdRONk4O9X7AZPT9A%3D%3D";
 $weatherMidFcstServiceUrl = "http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst";
 
 $sidoName = isset($_GET['sido']) ? $_GET['sido'] : '서울';
 $datetime = date('Y-m-d H:i');
 
-// 대기질 데이터 가져오는 함수
-function getAirQualityData($apiKey, $serviceUrl, $sidoName) {
+// 실시간 대기질 데이터 가져오는 함수
+function getAirQualityRealData($apiKey, $serviceUrl, $sidoName) {
     $queryParams = '?' . urlencode('serviceKey') . '=' . $apiKey;
     $queryParams .= '&' . urlencode('returnType') . '=' . urlencode('json');
     $queryParams .= '&' . urlencode('numOfRows') . '=' . urlencode('100');
     $queryParams .= '&' . urlencode('pageNo') . '=' . urlencode('1');
     $queryParams .= '&' . urlencode('sidoName') . '=' . urlencode($sidoName);
     $queryParams .= '&' . urlencode('ver') . '=' . urlencode('1.0');
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $serviceUrl . $queryParams);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($response, true);
+}
+
+// 대기질 예보통보 가져오기
+function getAirQualityForecastData($apiKey, $serviceUrl) {
+    // 현재 시각을 받아 DateTime 객체 생성
+    $now = new DateTime();
+    // 1시간 빼고 계산.
+    $now->modify('-1 hour');
+    // YYYY-MM-DD 형식의 날짜 문자열 추출
+    $base_date = $now->format('Y-m-d');
+
+    $queryParams = '?' . urlencode('serviceKey') . '=' . $apiKey;
+    $queryParams .= '&' . urlencode('returnType') . '=' . urlencode('json');
+    $queryParams .= '&' . urlencode('numOfRows') . '=' . urlencode('100');
+    $queryParams .= '&' . urlencode('pageNo') . '=' . urlencode('1');
+    $queryParams .= '&' . urlencode('searchDate') . '=' . urlencode($base_date);
+    $queryParams .= '&' . urlencode('InformCode') . '=' . urlencode('PM10');
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $serviceUrl . $queryParams);
@@ -188,6 +216,15 @@ function getRainSnowStatus($ptyCode) {
 
 // 5일 예보 데이터 가져오기
 function get5dayForecast($TempData, $FcstData) {
+    if ($FcstData['response']['header']['resultMsg'] == 'NO_DATA')
+    return [
+        ['date' => 'NO Data', 'low_temp' => 'NO Data', 'high_temp' => 'NO Data', 'fcstAm' => 'NO Data', 'fcstPm' => 'NO Data'], 
+        ['date' => 'NO Data', 'low_temp' => 'NO Data', 'high_temp' => 'NO Data', 'fcstAm' => 'NO Data', 'fcstPm' => 'NO Data'],
+        ['date' => 'NO Data', 'low_temp' => 'NO Data', 'high_temp' => 'NO Data', 'fcstAm' => 'NO Data', 'fcstPm' => 'NO Data'],
+        ['date' => 'NO Data', 'low_temp' => 'NO Data', 'high_temp' => 'NO Data', 'fcstAm' => 'NO Data', 'fcstPm' => 'NO Data'],
+        ['date' => 'NO Data', 'low_temp' => 'NO Data', 'high_temp' => 'NO Data', 'fcstAm' => 'NO Data', 'fcstPm' => 'NO Data'],
+    ];
+    else
     $now = new DateTime();
     return [
         ['date' => $now->modify('+3 days')->format('Y-m-d'), 'low_temp' => $TempData['response']['body']['items']['item'][0]['taMin3'], 'high_temp' => $TempData['response']['body']['items']['item'][0]['taMax3'], 
